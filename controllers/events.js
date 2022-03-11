@@ -4,13 +4,23 @@ const Evento = require("../models/Evento");
 
 const getEvents = async(req, res = response) => {
 
-    const events = await Evento.find()
-                               .populate('user', 'name');
+    try {
+       const eventos = await Evento.find()
+                              .populate('user', 'name');
+        
+        res.status(201).json({
+            ok: true,
+            eventos
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        })
+    }
 
-    res.status(201).json({
-        ok: true,
-        eventos: events
-    })
+ 
 }
 
 const createEvent = async(req, res = response) => {
@@ -55,7 +65,10 @@ const updateEvent = async(req, res = response) => {
         }
 
         if(event.user.toString() !== uid){
-            return res.status(401).json({
+            return res.
+            status(401).
+
+            json({
                 ok: false,
                 msg: 'No tiene privilegio de editar este evento'
             });
@@ -68,7 +81,8 @@ const updateEvent = async(req, res = response) => {
 
         const eventActualizado = await Evento.findByIdAndUpdate( eventId, nuevoEvento, {new: true} );
 
-        res.json({
+        res.        
+        json({
             ok: true,
             msg: 'evento actualizado',
             evento: eventActualizado
@@ -82,10 +96,7 @@ const updateEvent = async(req, res = response) => {
         })
     }
 
-    res.status(201).json({
-        ok: true,
-        msg: 'updateEvent'
-    })
+   
 }
 
 const deleteEvent = async(req, res = response) => {
@@ -122,10 +133,6 @@ const deleteEvent = async(req, res = response) => {
         
     }
 
-    res.status(201).json({
-        ok: true,
-        msg: 'deleteEvent'
-    })
 }
 
 module.exports = {

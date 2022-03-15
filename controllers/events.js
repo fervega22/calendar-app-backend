@@ -1,7 +1,7 @@
 const { response } = require("express");
 const Evento = require("../models/Evento");
 
-
+//Obtener listado de eventos ya creados
 const getEvents = async(req, res = response) => {
 
     try {
@@ -18,18 +18,16 @@ const getEvents = async(req, res = response) => {
             ok: false,
             msg: 'Hable con el administrador'
         })
-    }
-
- 
+    } 
 }
 
+//Crear un nuevo evento en bd
 const createEvent = async(req, res = response) => {
 
     const event = new Evento(req.body);
 
-    try {
-        
-        event.user = req.uid;
+    try {        
+        event.user = req.uid; //Usuario que creo el evento
 
         const eventoGuardado = await event.save();
 
@@ -47,15 +45,15 @@ const createEvent = async(req, res = response) => {
     }
 }
 
-
+//actualizar un evento existente
 const updateEvent = async(req, res = response) => {
 
     const eventId = req.params.id;
     const uid = req.uid;
 
     try {
-
-        const event = await Evento.findById(eventId);
+        //Recupera el evento de la bd por el id
+        const event = await Evento.findById(eventId); 
 
         if(!event){
             return res.status(404).json({
@@ -63,7 +61,8 @@ const updateEvent = async(req, res = response) => {
                 msg: 'No existe el registro con ese ID'
             })
         }
-
+        //Validar si el usuario actual es el que creo el evento
+        //en caso negativo no puede actualizar el evento
         if(event.user.toString() !== uid){
             return res.
             status(401).
@@ -81,8 +80,7 @@ const updateEvent = async(req, res = response) => {
 
         const eventActualizado = await Evento.findByIdAndUpdate( eventId, nuevoEvento, {new: true} );
 
-        res.        
-        json({
+        res.json({
             ok: true,
             msg: 'evento actualizado',
             evento: eventActualizado
@@ -94,18 +92,17 @@ const updateEvent = async(req, res = response) => {
             ok: false,
             msg: 'Hable con el administrador'
         })
-    }
-
-   
+    }   
 }
 
+//Elimina un evento de bd
 const deleteEvent = async(req, res = response) => {
 
     const eventId = req.params.id;
     const uid = req.uid;
 
     try {
-
+        //Recupera el evento de la bd por el id
         const event = await Evento.findById(eventId);
 
         if(!event){
@@ -115,6 +112,8 @@ const deleteEvent = async(req, res = response) => {
             })
         }
 
+        //Validar si el usuario actual es el que creo el evento
+        //en caso negativo no puede eliminar el evento
         if(event.user.toString() !== uid){
             return res.status(401).json({
                 ok: false,

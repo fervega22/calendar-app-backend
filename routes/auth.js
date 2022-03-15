@@ -11,6 +11,7 @@ const { validarJWT } = require('../middlewares/validar-jwt');
 
 const router = Router();
 
+//Endpoint para crear nuevos usuarios
 router.post(
     '/new',
     [
@@ -22,6 +23,7 @@ router.post(
     ],
     createUser);
 
+//Endpoint para loguear usuarios ya existentes
 router.post(
     '/',
     [
@@ -31,7 +33,7 @@ router.post(
     ],
     loginUser);
 
-    
-    router.get('/renew', validarJWT, revalidarToken);
+//Endpoint para revalidar el token
+router.get('/renew', validarJWT, revalidarToken);
 
 module.exports = router;

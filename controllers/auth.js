@@ -3,14 +3,14 @@ const {response} = require('express');
 const { generarJWT } = require('../helpers/jwt');
 const Usuario = require('../models/Usuario');
 
-
+//Crear un usuario en base de datos
 const createUser = async (req, res = response) =>{
 
     const {email, password} = req.body;
 
     try {
-        
-        let user = await Usuario.findOne({email});
+        //REvisa si ya existe ese correo en la base de datos - devuelve un boolean
+        let user = await Usuario.findOne({email}); 
 
         if(user){
             return res.status(400).json({
@@ -21,7 +21,7 @@ const createUser = async (req, res = response) =>{
 
         user = new Usuario(req.body);
 
-        //Encrypt password
+        //Encriptar password
         const salt = bcrypt.genSaltSync();
         user.password = bcrypt.hashSync(password, salt);
 
@@ -38,7 +38,6 @@ const createUser = async (req, res = response) =>{
         })
 
     } catch (error) {
-
         res.status(500).json({
             ok: false,
             msg: 'Por favor contacte al administrador'
@@ -48,7 +47,7 @@ const createUser = async (req, res = response) =>{
     
 }
 
-
+//Login del usuario
 const loginUser = async (req, res = response) =>{
 
     const { email, password } = req.body;    
@@ -91,6 +90,7 @@ const loginUser = async (req, res = response) =>{
    
 }
 
+//Revalida el token para mantener al usuario activo
 const revalidarToken = async (req, res = response) =>{
     try{
         const uid = req.uid;
@@ -101,6 +101,8 @@ const revalidarToken = async (req, res = response) =>{
 
         res.json({
             ok: true,
+            uid,
+            name,
             token
         })
 

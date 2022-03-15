@@ -1,6 +1,7 @@
 
 const jwt = require('jsonwebtoken');
 
+//Genera un token. En este caso es valido por 2 horas
 const generarJWT = ( uid, name ) => {
 
     return new Promise( (resolve, reject) => {
@@ -21,7 +22,5 @@ const generarJWT = ( uid, name ) => {
 }
 
 module.exports = {
-
     generarJWT 
-
 }

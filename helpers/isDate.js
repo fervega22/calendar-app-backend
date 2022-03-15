@@ -1,5 +1,6 @@
 const moment = require("moment");
 
+//Revisa que los valores de los campos de fechas sean validos
 const isDate = (value) => {
 
     if(!value){
